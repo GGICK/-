@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>끝말잇기</title>
+  </head>
+  <body>
+    <div><span id="order">1</span>번째 참가자</div>
+    <div>제시어 : <span id="word"></span></div>
+    <input type="text" />
+    <button>입력</button>
+
+    <script>
+      //참가자 수 프롬프트로 띄3우고 받은 값을 숫자로 변환하여 변수에 저장
+      const number = Number(prompt("참가자 수를 입력해주세요."));
+
+      // input 태그 이벤트 선택
+      const $input = document.querySelector("input");
+
+      // button 태그 이벤트선택
+      const $button = document.querySelector("button");
+
+      //id = word 인 태그에 이벤트 선택
+      const $word = document.querySelector("#word");
+
+      //id = order 인 태그에 이벤트 선택
+      const $order = document.querySelector("#order");
+
+      let word;
+      let newWord; // 단어 입력시 화면에 나타날 단어
+      // 사용자가 입력한 단어를 변수에 저장하는 함수
+      const onInput = (event) => {
+        newWord = event.target.value;
+      };
+
+      const onClickButton = () => {
+        //(!word)사용자가 단어를 입력하지 않았다면 첫번째 순서 사용자가 입력한다는 의미 즉 제시어가 된다.
+        if (!word) {
+          word = newWord; // 첫번째 사용자가 입력한 제시어를 변수에 저장
+          $word.textContent = word; // 변수를 화면에 표시
+          // 변수에 사용자 순서를 숫자로 저장
+          const order = Number($order.textContent);
+          if (order + 1 > number) {
+            $order.textContent = 1; // 만약 참가자수보다 커진다면 다시 첫번재 참가자로 표기한다.
+          } else {
+            $order.textContent = order + 1; // 참가자 수보다 작은 수라면 1을 더해서 표기한다.
+          }
+          $input.value = ""; // 입력란을 지움
+          $input.focus(); // 입력란에 커서 위치
+        } else {
+          // 단어가 입력되어 있는 상태라면 다음순서의 사용자가 입력한다는 의미
+          // 따라서 [제시어의 끝글자와 word.at(-1)] [다음순서의 사용자 단어의 첫글자가 newWord[0]] 같은지 확인
+          if (word.at(-1) === newWord[0]) {
+            word = newWord; // 다음 순서의 사용자가 입력한 단어를 변수에저장
+            $word.textContent = word; // 변수를 화면에 표시
+
+            const order = Number($order.textContent);
+            if (order + 1 > number) {
+              $order.textContent = 1;
+            } else {
+              $order.textContent = order + 1;
+            }
+            $input.value = "";
+            $input.focus();
+          } else {
+            alert("틀린 단어입니다.");
+            $input.value = "";
+            $input.focus();
+          }
+        }
+      };
+
+      $input.addEventListener("input", onInput); // input 이벤트에 연결
+      $button.addEventListener("click", onClickButton); // click 이벤트에 연결
+    </script>
+  </body>
+</html>
